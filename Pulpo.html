@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>My first three.js app</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<label for="Piel">Colores: </labeL>
+		<select class="selectpicker" id="Piel">
+			<option value="1">Rosa</option>
+			<option value="2">Verde</option>
+			<option value="3">Blanco</option>
+			<option value="4">Rojo</option>
+		  </select>
+
+		  
+	<body>
+		
+		<script src="js/three.js"></script>
+        <script src="js/OrbitControls.js"></script>
+        <script src="js/GLTFLoader.js"></script>
+
+		<script>
+			
+			const scene = new THREE.Scene();
+			const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+			const renderer = new THREE.WebGLRenderer();
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+			renderer.setClearColor("purple");
+
+			
+			
+		
+
+			//
+			const texture1 = new THREE.TextureLoader().load( 'texturas/octopus_toy_texture.png' );
+			const texture2 = new THREE.TextureLoader().load( 'texturas/Pulpotexture.png' );
+			const texture3 = new THREE.TextureLoader().load( 'texturas/PulpotextureOjos.png' );
+			const texture4 = new THREE.TextureLoader().load( 'texturas/PulpotextureBoca.png' );
+			//
+			
+
+            //
+			const geometry = new THREE.BoxGeometry( 1, 2, 1 );
+                                                                   //R G B
+			const material = new THREE.MeshBasicMaterial( { color: '#ff0000' } );
+			const cube = new THREE.Mesh( geometry, material );
+			//scene.add( cube );
+            //
+
+
+			const spotLight = new THREE.SpotLight( 0xffffff );
+		
+
+			scene.add( spotLight );
+
+			const light = new THREE.AmbientLight( 0x404040 ); // soft white light
+			scene.add( light );
+			//
+			const texture = new THREE.TextureLoader().load( 'texturas/water.jpeg' );
+			const geometry1 = new THREE.PlaneGeometry( 10, 10 );
+			const material1 = new THREE.MeshBasicMaterial( {color:'cyan', side: THREE.DoubleSide} );
+			const plane = new THREE.Mesh( geometry1, material1 );
+			//scene.add( plane );
+			plane.rotation.x= 8;
+			plane.position.y=-1.9;
+			//
+
+			//var choosePiel = document.getElementById('Piel');
+
+			//
+			let loader= new THREE.GLTFLoader();
+			loader.load('models/pulpoconvert.gltf',function(model){
+				console.log(model.scene)
+				let mat = new THREE.MeshBasicMaterial({map:texture1})
+				let mat2 = new THREE.MeshBasicMaterial({map:texture2})
+				let mat3 = new THREE.MeshBasicMaterial({map:texture3})
+				let mat4 = new THREE.MeshBasicMaterial({map:texture4})
+				model.scene.children[0].material=mat;
+
+				//model.scene.children[0].children[1].material=mat;
+				//model.scene.children[0].children[1].scale.set(1,1,1);
+				scene.add(model.scene);
+
+				//
+				var choosePiel = document.getElementById('Piel');
+
+
+				choosePiel.onchange = () =>{
+				if(choosePiel.value == '1'){
+					model.scene.children[0].material=mat;
+				}
+				else if(choosePiel.value == '2'){
+					model.scene.children[0].material=mat2;
+				}
+				else if(choosePiel.value == '3'){
+					model.scene.children[0].material=mat3;
+				}
+				else if(choosePiel.value == '4'){
+					model.scene.children[0].material=mat4;
+				}
+				}
+			});
+
+
+			camera.position.z = 5;
+            const controls = new THREE.OrbitControls( camera, renderer.domElement );
+            controls.update();
+			function animate() {
+				requestAnimationFrame( animate );
+                controls.update();
+				//cube.rotation.z += 0.01;
+				//cube.rotation.y += 0.01;
+
+				renderer.render( scene, camera );
+			};
+
+           
+
+			animate();
+		</script>
+	</body>
+</html>
